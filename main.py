@@ -10,25 +10,62 @@
 def belongsToLanguage(x):
     return x in ['a', 'b']
 
-
 def readNumberOfStrings(line):
     return int(line.strip())
 
+def initialState(string, length):
+    if 1 >= length:
+      print(string + ': não pertence.');
+    elif(not(belongsToLanguage(string[0]))):
+      print(string + ': não pertence.');
+    elif string[0] == 'a':
+      firstState(string, 1, length);
+    elif string[0] == 'b':
+      thirdState(string, 1, length);
+
+def firstState(string, charIndex, length):
+    if charIndex + 1 == length:
+      print(string + ': não pertence.');
+    elif(not(belongsToLanguage(string[charIndex]))):
+      print(string + ': não pertence.');
+    elif string[charIndex] == 'a':
+      fourthState(string);
+    elif string[charIndex] == 'b':
+      secondState(string, charIndex + 1, length);
+
+def secondState(string, charIndex, length):
+    if charIndex + 1 == length:
+      print(string + ': não pertence.');
+    elif(not(belongsToLanguage(string[charIndex]))):
+      print(string + ': não pertence.');
+    elif string[charIndex] == 'a':
+      fourthState(string);
+    elif string[charIndex] == 'b':
+      thirdState(string, charIndex + 1, length);
+
+def thirdState(string, charIndex, length):
+    if charIndex + 1 == length:
+      print(string + ': pertence.');
+    elif(not(belongsToLanguage(string[charIndex]))):
+      print(string + ': não pertence.');
+    elif string[charIndex] == 'a':
+      firstState(string, charIndex + 1, length);
+    elif string[charIndex] == 'b':
+      thirdState(string, charIndex + 1, length);
+
+def fourthState(string):
+    print(string + ': não pertence.');
 
 def finiteStateMachine(fileName):
     with open(fileName, 'r') as f:
-        print('Lendo o arquivo ' + fileName + ':')
-        lines = f.readlines()
-        numberOfStrings = readNumberOfStrings(lines[0])
+        print('Lendo o arquivo ' + fileName + ':');
+        lines = f.readlines();
+        numberOfStrings = readNumberOfStrings(lines[0]);
         for i in range(1, numberOfStrings + 1):
-            print(i)
-            strippedLine = lines[i].strip()
-            lineLenght = len(lines[i])
-            if (lineLenght <= 1):
-                print(strippedLine + ': não pertence.')
-                f.close()
-                continue
+            print(i);
+            strippedLine = lines[i].strip();
+            lineLenght = len(lines[i]);
+            initialState(strippedLine, lineLenght);
         f.close()
-
 
 finiteStateMachine('strings1.txt')
