@@ -7,5 +7,5 @@ bb
 ab
 abb
 bba
-abababb
-bbabbaaab
+aaababababbababbba
+abbbbbbabbabbabbabbbbb

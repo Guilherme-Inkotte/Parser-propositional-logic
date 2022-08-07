@@ -14,7 +14,7 @@ def readNumberOfStrings(line):
     return int(line.strip())
 
 def initialState(string, length):
-    if 1 >= length:
+    if 0 >= length:
       print(string + ': não pertence.');
     elif(not(belongsToLanguage(string[0]))):
       print(string + ': não pertence.');
@@ -24,7 +24,7 @@ def initialState(string, length):
       thirdState(string, 1, length);
 
 def firstState(string, charIndex, length):
-    if charIndex + 1 == length:
+    if charIndex  == length:
       print(string + ': não pertence.');
     elif(not(belongsToLanguage(string[charIndex]))):
       print(string + ': não pertence.');
@@ -34,7 +34,7 @@ def firstState(string, charIndex, length):
       secondState(string, charIndex + 1, length);
 
 def secondState(string, charIndex, length):
-    if charIndex + 1 == length:
+    if charIndex == length:
       print(string + ': não pertence.');
     elif(not(belongsToLanguage(string[charIndex]))):
       print(string + ': não pertence.');
@@ -44,7 +44,7 @@ def secondState(string, charIndex, length):
       thirdState(string, charIndex + 1, length);
 
 def thirdState(string, charIndex, length):
-    if charIndex + 1 == length:
+    if charIndex == length:
       print(string + ': pertence.');
     elif(not(belongsToLanguage(string[charIndex]))):
       print(string + ': não pertence.');
@@ -62,10 +62,12 @@ def finiteStateMachine(fileName):
         lines = f.readlines();
         numberOfStrings = readNumberOfStrings(lines[0]);
         for i in range(1, numberOfStrings + 1):
-            print(i);
             strippedLine = lines[i].strip();
-            lineLenght = len(lines[i]);
+            lineLenght = len(strippedLine);
             initialState(strippedLine, lineLenght);
+        print();
         f.close()
 
 finiteStateMachine('strings1.txt')
+finiteStateMachine('strings2.txt')
+finiteStateMachine('strings3.txt')
