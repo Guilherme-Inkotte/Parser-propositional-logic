@@ -6,7 +6,6 @@
 # Neste  exemplo  temos  3  strings  de  entrada.  O  número  de  strings em  cada  arquivo será representado  por  um  número  inteiro  positivo.  A  resposta  do  seu  programa  deverá conter  uma, e somente uma linha de saída para cada string. Estas linhas conterão a string de entrada e o resultado  da validação conforme o formato indicado a seguir:
 #   abbaba: não pertence.
 
-
 def belongsToLanguage(x):
     return x in ['a', 'b']
 
@@ -71,3 +70,5 @@ def finiteStateMachine(fileName):
 finiteStateMachine('strings1.txt')
 finiteStateMachine('strings2.txt')
 finiteStateMachine('strings3.txt')
+# Para testar com novos arquivos, é necessário chamar a função finiteStateMachine com
+# o nome do arquivo no parâmetro.
