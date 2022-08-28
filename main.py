@@ -61,7 +61,7 @@ def unaryFormula(str):
 
 def binaryFormula(str):
     splitStr = str.split()
-    if (len(splitStr) < 5): return False
+    if len(splitStr) < 5: return False
     if (not openParentheses(splitStr[0]) or not binaryOperator(splitStr[1])
             or not closeParentheses(splitStr[len(splitStr) - 1])):
         return False
@@ -74,8 +74,21 @@ def binaryFormula(str):
     if (formula(splitStr[len(splitStr) - 1])):
         splitStr.pop()
         return formula(' '.join(splitStr))
-    # Adicionar aqui o código para quando tiver duas fórmulas binárias ou unárias
-    print('Teste:', splitStr)
+    doubleFormulaString = ' '.join(splitStr)
+    parenthesesStackCount = 0
+    endOfFirstFormulaIndex = -1
+    for charIndex in range(len(doubleFormulaString)):
+        if doubleFormulaString[charIndex] == "(":
+            parenthesesStackCount += 1
+        if doubleFormulaString[charIndex] == ")":
+            parenthesesStackCount -= 1
+            if parenthesesStackCount < 0:
+                return False
+            if parenthesesStackCount == 0:
+                endOfFirstFormulaIndex = charIndex
+                break
+    if parenthesesStackCount != 0: return False
+    return formula(doubleFormulaString[:endOfFirstFormulaIndex+1]) and formula(doubleFormulaString[endOfFirstFormulaIndex+2:])
 
 
 def formula(str):
@@ -94,7 +107,6 @@ def parser(fileName):
         numberOfStrings = readNumberOfStrings(lines[0])
         for i in range(1, numberOfStrings + 1):
             strippedLine = lines[i].strip()
-            lineLenght = len(strippedLine)
             if (formula(strippedLine)):
                 print(strippedLine + ': válida')
             else:
@@ -104,7 +116,5 @@ def parser(fileName):
 
 
 parser('strings1.txt')
-# parser('strings2.txt')
-# parser('strings3.txt')
 # Para testar com novos arquivos, é necessário chamar a função finiteStateMachine com
 # o nome do arquivo no parâmetro.
