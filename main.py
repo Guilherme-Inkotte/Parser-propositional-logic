@@ -88,7 +88,9 @@ def binaryFormula(str):
                 endOfFirstFormulaIndex = charIndex
                 break
     if parenthesesStackCount != 0: return False
-    return formula(doubleFormulaString[:endOfFirstFormulaIndex+1]) and formula(doubleFormulaString[endOfFirstFormulaIndex+2:])
+    return formula(
+        doubleFormulaString[:endOfFirstFormulaIndex + 1]) and formula(
+            doubleFormulaString[endOfFirstFormulaIndex + 2:])
 
 
 def formula(str):
