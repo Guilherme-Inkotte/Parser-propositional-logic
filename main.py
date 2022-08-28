@@ -1,74 +1,110 @@
-# O programa que você desenvolverá irá receber como entrada um arquivo de texto (.txt) contendo várias strings. A primeira linha do arquivo indica quantas strings estão no arquivo de texto de entrada. As linhas subsequentes contém uma string por linha. A seguir está um exemplo das linhas que podem existir em um arquivo de testes para o programa que você irá desenvolver:
-#   3
-#   abbaba
-#   abababb
-#   bbabbaaab
-# Neste  exemplo  temos  3  strings  de  entrada.  O  número  de  strings em  cada  arquivo será representado  por  um  número  inteiro  positivo.  A  resposta  do  seu  programa  deverá conter  uma, e somente uma linha de saída para cada string. Estas linhas conterão a string de entrada e o resultado  da validação conforme o formato indicado a seguir:
-#   abbaba: não pertence.
+# Author: Guilherme Henrique Schneider Inkotte
 
-def belongsToLanguage(x):
-    return x in ['a', 'b']
+# Para  obter  os  pontos  relativos  a  este  trabalho, você  deverá  fazer  um  programa,  usando  a linguagem de programação que desejar, que seja capaz de validar expressões de lógica propisicional escritas em latex e definir se são expressões gramaticalmente corretas. Você validará apenas a forma da expressão (sintaxe).
+# A entrada será fornecida por um arquivo de textos que será carregado em linha de comando, com a seguinte formatação:
+# 1. Na primeira linha deste arquivo existe um número inteiro que informa quantas expressões lógicas estão no arquivo.
+# 2. Cada uma das linhas seguintes contém uma expressão lógica que deve ser validada.
+# A saída do seu programa será no terminal padrão do sistema e constituirá de uma linha de saída para cada expressão lógica de entrada contendo ou a palavra valida ou a palavra inválida e nada mais.
+# Gramática:
+# Formula=Constante|Proposicao|FormulaUnaria|FormulaBinaria.
+# Constante="T"|"F".
+# Proposicao=[a−z0−9]+
+# FormulaUnaria=AbreParen OperadorUnario Formula FechaParen
+# FormulaBinaria=AbreParen OperatorBinario Formula Formula FechaParen
+# AbreParen="("
+# FechaParen=")"
+# OperatorUnario="¬"
+# OperatorBinario="∨"|"∧"|"→"|"↔"
+# Cada  expressão  lógica  avaliada  pode  ter  qualquer  combinação  das  operações  de  negação, conjunção, disjunção, implicação e bi-implicação sem limites na combiação de preposições e operações.
+# Os valores lógicos True e False estão representados na gramática e, como tal, podem ser usados em qualquer expressão de entrada.
+
+import re
+
+propositionRegex = re.compile(r'^[a-z0-9]+$')
+
+
+def constant(str):
+    return str in ['T', 'F']
+
+
+def proposition(str):
+    return propositionRegex.search(str)
+
+
+def openParentheses(str):
+    return str == '('
+
+
+def closeParentheses(str):
+    return str == ')'
+
+
+def unaryOperator(str):
+    return str == '¬'
+
+
+def binaryOperator(str):
+    return str in ['∨', '∧', '→', '↔']
+
+
+def unaryFormula(str):
+    splitStr = str.split()
+    if (len(splitStr) < 4): return False
+    if (not openParentheses(splitStr[0]) or not unaryOperator(splitStr[1])
+            or not closeParentheses(splitStr[len(splitStr) - 1])):
+        return False
+    splitStr.pop()
+    splitStr.pop(0)
+    splitStr.pop(0)
+    return formula(' '.join(splitStr))
+
+
+def binaryFormula(str):
+    splitStr = str.split()
+    if (len(splitStr) < 5): return False
+    if (not openParentheses(splitStr[0]) or not binaryOperator(splitStr[1])
+            or not closeParentheses(splitStr[len(splitStr) - 1])):
+        return False
+    splitStr.pop()
+    splitStr.pop(0)
+    splitStr.pop(0)
+    if (formula(splitStr[0])):
+        splitStr.pop(0)
+        return formula(' '.join(splitStr))
+    if (formula(splitStr[len(splitStr) - 1])):
+        splitStr.pop()
+        return formula(' '.join(splitStr))
+    # Adicionar aqui o código para quando tiver duas fórmulas binárias ou unárias
+    print('Teste:', splitStr)
+
+
+def formula(str):
+    return (constant(str) or proposition(str) or unaryFormula(str)
+            or binaryFormula(str))
+
 
 def readNumberOfStrings(line):
     return int(line.strip())
 
-def initialState(string, length):
-    if 0 >= length:
-      print(string + ': não pertence.');
-    elif(not(belongsToLanguage(string[0]))):
-      print(string + ': não pertence.');
-    elif string[0] == 'a':
-      firstState(string, 1, length);
-    elif string[0] == 'b':
-      thirdState(string, 1, length);
 
-def firstState(string, charIndex, length):
-    if charIndex  == length:
-      print(string + ': não pertence.');
-    elif(not(belongsToLanguage(string[charIndex]))):
-      print(string + ': não pertence.');
-    elif string[charIndex] == 'a':
-      fourthState(string);
-    elif string[charIndex] == 'b':
-      secondState(string, charIndex + 1, length);
-
-def secondState(string, charIndex, length):
-    if charIndex == length:
-      print(string + ': não pertence.');
-    elif(not(belongsToLanguage(string[charIndex]))):
-      print(string + ': não pertence.');
-    elif string[charIndex] == 'a':
-      fourthState(string);
-    elif string[charIndex] == 'b':
-      thirdState(string, charIndex + 1, length);
-
-def thirdState(string, charIndex, length):
-    if charIndex == length:
-      print(string + ': pertence.');
-    elif(not(belongsToLanguage(string[charIndex]))):
-      print(string + ': não pertence.');
-    elif string[charIndex] == 'a':
-      firstState(string, charIndex + 1, length);
-    elif string[charIndex] == 'b':
-      thirdState(string, charIndex + 1, length);
-
-def fourthState(string):
-    print(string + ': não pertence.');
-
-def finiteStateMachine(fileName):
+def parser(fileName):
     with open(fileName, 'r') as f:
-        print('Lendo o arquivo ' + fileName + ':');
-        lines = f.readlines();
-        numberOfStrings = readNumberOfStrings(lines[0]);
+        print('Lendo o arquivo ' + fileName + ':')
+        lines = f.readlines()
+        numberOfStrings = readNumberOfStrings(lines[0])
         for i in range(1, numberOfStrings + 1):
-            strippedLine = lines[i].strip();
-            lineLenght = len(strippedLine);
-            initialState(strippedLine, lineLenght);
-        print();
+            strippedLine = lines[i].strip()
+            lineLenght = len(strippedLine)
+            if (formula(strippedLine)):
+                print(strippedLine + ': válida')
+            else:
+                print(strippedLine + ': inválida')
+        print()
         f.close()
 
-finiteStateMachine('strings1.txt')
-finiteStateMachine('strings2.txt')
-finiteStateMachine('strings3.txt')
+
+parser('strings1.txt')
+# parser('strings2.txt')
+# parser('strings3.txt')
 # Para testar com novos arquivos, é necessário chamar a função finiteStateMachine com
 # o nome do arquivo no parâmetro.

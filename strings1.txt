@@ -1,11 +1,11 @@
 10
-a
-b
-abbbbbbbabb
-aa
-bb
-ab
-abb
-bba
-aaababababbababbba
-abbbbbbabbabbabbabbbbb
+T
+F
+abc15
+abc
+15
+ABC15
+( ¬ T )
+( ¬ ( ¬ T ) )
+( ¬ ABC )
+( ∨  ( ¬ T ) ( ¬ F ) )
